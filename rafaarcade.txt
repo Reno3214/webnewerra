@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Raf Market - Portofolio Gelap</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a0f;
+            color: #e0e0e0;
+            overflow-x: hidden;
+        }
+        .dark-mode {
+            background: #0a0a0f;
+            color: #e0e0e0;
+        }
+        .card {
+            background: rgba(20, 20, 30, 0.8);
+            border: 1px solid #2a2a3a;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            border-color: #4a4a5a;
+            transform: translateY(-2px);
+        }
+        #snakeCanvas {
+            display: block;
+            border: 2px solid #3a3a5a;
+            border-radius: 4px;
+        }
+        .bot-indicator {
+            transition: all 0.3s ease;
+        }
+        .bot-battle {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        .neon-text {
+            color: #00ff88;
+            text-shadow: 0 0 10px #00ff88, 0 0 20px #00ff88;
+        }
+        .neon-bg {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.1), rgba(0, 200, 255, 0.05));
+        }
+    </style>
+</head>
+<body class="dark-mode min-h-screen">
+
+    <!-- Header -->
+    <header class="relative z-10 border-b border-[#2a2a3a]">
+        <div class="max-w-6xl mx-auto px-4 py-6 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <h1 class="text-2xl font-bold neon-text">Raf Market</h1>
+                <p class="text-sm opacity-80">Portofolio Gelap</p>
+            </div>
+            <nav class="flex items-center gap-8">
+                <button class="text-sm text-gray-300 hover:text-white transition">Gaming</button>
+                <button class="text-sm text-gray-300 hover:text-white transition">Bot Battle</button>
+                <button class="text-sm text-gray-300 hover:text-white transition">About</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative z-10 min-h-[60vh] flex flex-col items-center justify-center text-center">
+        <div class="mb-8">
+            <h2 class="text-4xl md:text-6xl font-bold mb-4 neon-text">Raf Market</h2>
+            <p class="text-xl opacity-80">Portofolio Digital & Game Development</p>
+        </div>
+        <div class="w-96 mx-auto max-w-md">
+            <div class="bg-[#1a1a2e] rounded-2xl p-6">
+                <h3 class="text-2xl font-semibold mb-2">Ular Tangga</h3>
+                <p class="text-gray-400">Game klasik interaktif</p>
+            </div>
+            <div class="mt-6 bg-[#0f0f1f] rounded-xl p-4">
+                <h3 class="text-lg font-semibold mb-2">Bot Battle</h3>
+                <p class="text-gray-400">Perhitungan strategi bot</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Snake Game Section -->
+    <section class="max-w-6xl mx-auto px-4 py-12">
+        <div class="flex flex-col md:flex-row gap-8">
+            <div class="w-full md:w-1/2">
+                <h2 class="text-2xl font-bold mb-4 neon-text">Ular Tangga</h2>
+                <div class="card">
+                    <div class="text-4xl font-bold mb-4">Score: <span id="snakeScore">0</span></div>
+                    <div class="flex items-center gap-4">
+                        <div class="flex items-center gap-2">
+                            <div class="w-12 h-12 rounded bg-[#2a2a4a] flex items-center justify-center">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 20l-4 4L8 12m4-4l4 4 4-4M6 12l-2 2 2-2"/>
+                                </svg>
+                                <span class="text-sm font-bold">Snake</span>
+                            </div>
+                            <span id="snakeDir">→</span>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-gray-400">Status: <span id="snakeStatus">Aktif</span></p>
+                        </div>
+                    </div>
+                    <canvas id="snakeCanvas" width="400" height="400"></canvas>
+                </div>
+            </div>
+            <div class="w-full md:w-1/2">
+                <h2 class="text-2xl font-bold mb-4 neon-text">Perhitungan Bot Battle</h2>
+                <div class="card">
+                    <div class="mb-4">
+                        <p class="text-gray-400 text-sm">Bot A vs Bot B</p>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <p class="text-xs text-gray-500">Bot A Score</p>
+                                <div id="botAScore" class="text-2xl font-bold text-green-400">0</div>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-500">Bot B Score</p>
+                                <div id="botBScore" class="text-2xl font-bold text-red-400">0</div>
+                            </div>
+                        </div>
+                    </div>
+                    <button id="resetSnake" class="w-full py-3 px-6 bg-[#2a2a3a] hover:bg-[#3a3a4a] text-white font-bold rounded-lg transition">
+                        Reset Ular
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bot Battle Calculation Section -->
+    <section class="max-w-6xl mx-auto px-4 py-12">
+        <h2 class="text-2xl font-bold mb-6 neon-text">Perhitungan Bot Battle</h2>
+        <div class="card">
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <p class="text-lg">Statistik Bot Battle Raf Market</p>
+                    <p class="text-sm text-gray-400">Perhitungan mendalam strategi bot AI</p>
+                </div>
+                <div class="flex gap-4">
+                    <div class="flex-1">
+                        <p class="text-xs text-gray-500">Bot A</p>
+                        <p class="text-xl font-bold text-green-400" id="botAPerf">Score: 0</p>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-xs text-gray-500">Bot B</p>
+                        <p class="text-xl font-bold text-red-400" id="botBPerf">Score: 0</p>
+                    </div>
+                </div>
+            </div>
+            <div class="space-y-4 mt-8">
+                <div class="card">
+                    <h3 class="text-xl font-semibold mb-2">Faktor Perhitungan</h3>
+                    <ul class="list-disc list-inside text-gray-400">
+                        <li>Kecepatan navigasi bot</li>
+                        <li>Efisiensi resource utilization</li>
+                        <li>Toleransi error handling</li>
+                        <li>Adaptability terhadap environment</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3 class="text-xl font-semibold mb-2">Hasil Perhitungan</h3>
+                    <div id="botBattleResult" class="text-center p-6 bg-[#1a1a2e] rounded-lg">
+                        <div class="text-4xl font-bold neone-text" id="finalScore">0-0</div>
+                        <p class="text-gray-400 mt-2">Bot A vs Bot B</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-[#2a2a3a] mt-20">
+        <div class="max-w-6xl mx-auto px-4 py-8 text-center">
+            <p class="text-gray-600">© 2026 Raf Market | Dardcor Agent | Portofolio Gelap</p>
+            <p class="opacity-50 mt-2">All rights reserved. Dark theme technology.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Snake Game
+        const canvas = document.getElementById('snakeCanvas');
+        const ctx = canvas.getContext('2d');
+        const snakeScoreEl = document.getElementById('snakeScore');
+        const snakeDirEl = document.getElementById('snakeDir');
+        const snakeStatusEl = document.getElementById('snakeStatus');
+        const resetSnakeBtn = document.getElementById('resetSnake');
+
+        let gridSize = 20;
+        let tileSize = 20;
+        let snake = [];
+        let food = {};
+        let direction = '→';
+        let gameLoop = null;
+        let gameOver = false;
+
+        // Initialize snake
+        function initSnake() {
+            snake = [
+                { x: 10, y: 10 },
+                { x: 9, y: 10 },
+                { x: 8, y: 10 }
+            ];
+            snakeScoreEl.textContent = 0;
+            updateSnakeStatus();
+        }
+
+        // Draw snake
+        function drawSnake() {
+            ctx.fillStyle = '#00ff88';
+            snake.forEach((segment, index) => {
+                ctx.fillRect(
+                    (segment.x * tileSize) + 1,
+                    (segment.y * tileSize) + 1,
+                    tileSize - 2,
+                    tileSize - 2
+                );
+            });
+        }
+
+        // Draw food
+        function drawFood() {
+            const x = Math.floor(Math.random() * gridSize);
+            const y = Math.floor(Math.random() * gridSize);
+            food = { x, y };
+            ctx.fillStyle = '#ff4444';
+            ctx.fillRect(
+                (x * tileSize) + 1,
+                (y * tileSize) + 1,
+                tileSize - 2,
+                tileSize - 2
+            );
+        }
+
+        // Update snake status
+        function updateSnakeStatus() {
+            snakeStatusEl.textContent = direction === '→' ? '→' : '↓' || '↑' || '←' || '↓';
+        }
+
+        // Main game loop
+        function gameLoop() {
+            if (gameOver) return;
+
+            // Move snake
+            const head = { ...snake[0] };
+            switch (direction) {
+                case '→': head.x++; break;
+                case '←': head.x--; break;
+                case '↓': head.y++; break;
+                case '↑': head.y--; break;
+            }
+
+            // Check wall collision
+            if (head.x < 0 || head.x >= gridSize || head.y < 0 || head.y >= gridSize) {
+                gameOver = true;
+                return;
+            }
+
+            // Check self collision
+            if (snake.some(seg => seg.x === head.x && seg.y === head.y)) {
+                gameOver = true;
+                return;
+            }
+
+            // Add new head
+            snake.unshift(head);
+
+            // Check food collision
+            if (head.x === food.x && head.y === food.y) {
+                // Increase score
+                snakeScoreEl.textContent = parseInt(snakeScoreEl.textContent) + 1;
+                updateSnakeStatus();
+                
+                // Spawn new food
+                drawFood();
+                // Don't remove tail - snake grows
+            } else {
+                snake.pop();
+            }
+
+            drawSnake();
+            drawFood();
+
+            gameLoop(); // Recursion for next frame
+        }
+
+        // Start game
+        function startGame() {
+            initSnake();
+            document.getElementById('snakeScore').textContent = 0;
+            document.getElementById('snakeDir').textContent = '→';
+            document.getElementById('snakeStatus').textContent = 'Aktif';
+            gameLoop();
+        }
+
+        // Reset game
+        resetSnakeBtn.addEventListener('click', () => {
+            initSnake();
+            document.getElementById('snakeScore').textContent = 0;
+            document.getElementById('snakeDir').textContent = '→';
+            document.getElementById('snakeStatus').textContent = 'Aktif';
+            gameLoop();
+        });
+
+        // Start when page loads
+        window.onload = startGame;
+
+        // Bot Battle Calculation
+        const botScores = {
+            A: 0,
+            B: 0
+        };
+
+        function calculateBotPerformance() {
+            // Simulate bot performance calculation
+            const totalBattles = 100;
+            const botAWins = Math.floor(totalBattles * 0.45);
+            const botBWins = totalBattles - botAWins;
+
+            botAPerf.textContent = 'Score: ' + botAWins;
+            botBPerf.textContent = 'Score: ' + botBWins;
+
+            // Determine winner
+            if (botAWins > botBWins) {
+                document.getElementById('finalScore').textContent = `${botAWins}-${botBWins}`;
+                document.getElementById('botAPerf').textContent = '胜利!';
+                document.getElementById('botBPerf').textContent = 'Pahit!';
+            } else if (botBWins > botAWins) {
+                document.getElementById('finalScore').textContent = `${botBWins}-${botAWins}`;
+                document.getElementById('finalScore').className = 'text-center p-6 bg-[#1a1a2e] rounded-lg neon-text';
+                document.getElementById('botAPerf').textContent = 'Pahit!';
+                document.getElementById('botBPerf').textContent = '胜利!';
+            } else {
+                document.getElementById('finalScore').textContent = '50-50';
+                document.getElementById('botAPerf').textContent = 'Dempun';
+                document.getElementById('botBPerf').textContent = 'Dempun';
+            }
+        }
+
+        // Initial bot calculation
+        calculateBotPerformance();
+
+        // Add some animations
+        setInterval(calculateBotPerformance, 3000);
+    </script>
+</body>
+</html>
